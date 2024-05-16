@@ -34,15 +34,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
+    steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       
     - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    steps:
     - name: Azure Kubernetes set context
       uses: Azure/aks-set-context@v3
       with:
