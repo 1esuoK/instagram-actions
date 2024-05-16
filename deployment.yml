@@ -58,7 +58,7 @@ kind: Service
 metadata:
   name: be
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: be
   ports:
@@ -93,7 +93,7 @@ kind: Service
 metadata:
   name: fe
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: fe
   ports:
