@@ -1,0 +1,81 @@
+name: AKS Deployment
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checks-out repository under $GITHUB_WORKSPACE
+    - name: Checkout Source
+      uses: actions/checkout@v4
+    
+    - name: Login to docker hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build backend docker image
+      run: docker build -t trituong/insta-aks-be .
+    
+    - name: Push backend docker image
+      run: docker push trituong/insta-aks-be
+
+    - name: Build frontend docker image
+      run: docker build -t trituong/insta-ake-fe ./frontend
+
+    - name: Push frontend docker image
+      run: docker push trituong/insta-aks-fe
+
+  deploy:
+    needs: build
+    runs on: ubuntu-latest
+
+    steps:
+    - name: Azure Kubernetes set context
+      uses: Azure/aks-set-context@v3
+      with:
+        # Azure credentials i.e. output of `az ad sp create-for-rbac --sdk-auth`
+        creds: '${{secrets.AZURE_CREDENTIALS}}'
+        # Resource Group Name
+        resource-group: actions-aks-rg
+        # AKS Cluster Name
+        cluster-name: actions-aks-cluster
+
+  # Create K8s secrets to pull images
+    - name: Create secret in Kubernetes cluster
+      uses: Azure/k8s-create-secret@v4
+      with:
+        # Container registry url
+        container-registry-url: https://hub.docker.com/v2/
+        # Container registry username
+        container-registry-username: '${{secrets.DOCKER_USERNAME}}'
+        # Container registry password
+        container-registry-password:  '${{secrets.DOCKER_PASSWORD}}'
+        # Type of Kubernetes secret. For example, docker-registry or generic
+        secret-type: docker-registry
+        # Name of the secret. You can use this secret name in the Kubernetes YAML configuration file.
+        secret-name: docker-image-pull-secret
+        
+      # Deploy to k8s cluster
+    - name: Deploy to Kubernetes cluster
+      uses: Azure/k8s-deploy@v5
+      with:        
+        # Path to the manifest files which will be used for deployment.
+        manifests: |
+          deployment.yml
+        # Fully qualified resource URL of the image(s) to be used for substitutions on the manifest files Example: contosodemo.azurecr.io/helloworld:test
+        images: |
+          trituong/insta-aks-be
+          trituong/insta-ake-fe
+        # Name of a docker-registry secret that has already been set up within the cluster. Each of these secret names are added under imagePullSecrets field for the workloads found in the input manifest files
+        imagepullsecrets: docker-image-pull-secret
+        # deploy/promote/reject
+        action: deploy
+        
+    
+        
+    
