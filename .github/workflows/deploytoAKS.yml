@@ -34,12 +34,19 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
     steps:
     - name: Azure Kubernetes set context
       uses: Azure/aks-set-context@v3
       with:
-        # Azure credentials i.e. output of `az ad sp create-for-rbac --sdk-auth`
-        creds: '${{secrets.AZURE_CREDENTIALS}}'
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
         # Resource Group Name
         resource-group: actions-aks-rg
         # AKS Cluster Name
@@ -55,9 +62,9 @@ jobs:
         container-registry-username: '${{secrets.DOCKER_USERNAME}}'
         # Container registry password
         container-registry-password:  '${{secrets.DOCKER_PASSWORD}}'
-        # Type of Kubernetes secret. For example, docker-registry or generic
+        # Type of Kubernetes secret.
         secret-type: docker-registry
-        # Name of the secret. You can use this secret name in the Kubernetes YAML configuration file.
+        # Name of the secret.
         secret-name: docker-image-pull-secret
         
       # Deploy to k8s cluster
