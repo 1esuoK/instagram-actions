@@ -49,7 +49,7 @@ spec:
     spec:
       containers:
       - name: be
-        image: nhutlinh231/backend-k8s
+        image: trituong/insta-eks-be
         ports:
         - containerPort: 5000
 ---
@@ -84,7 +84,7 @@ spec:
     spec:
       containers:
       - name: fe
-        image: nhutlinh231/frontend-k8s
+        image: trituong/insta-eks-fe
         ports:
         - containerPort: 3000
 ---
