@@ -1,2 +1,2 @@
-- CI/CD pipeline using Github Actions and AWS EKS
+- CI/CD pipeline using Github Actions and AKS
 - Source: https://github.com/jigar-sable/instagram-mern
