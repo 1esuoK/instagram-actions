@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 5000;
 connectDatabase();
 
 const server = app.listen(PORT, () => {
-    console.log(`Server Running on http://be:${PORT}`);
+    console.log(`Server Running on http://aks-be-pods:${PORT}`);
 });
 
 
