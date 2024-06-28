@@ -65,7 +65,7 @@ const Login = () => {
                 </div>
 
                 <div className="bg-white border p-5 text-center">
-                    <span>Don't have an account? <Link to="/register" className="text-primary-blue">Sign up</Link></span>
+                    <span>Don't have an account ? <Link to="/register" className="text-primary-blue">Sign up</Link></span>
                 </div>
             </Auth>
         </>
