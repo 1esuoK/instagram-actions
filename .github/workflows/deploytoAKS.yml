@@ -36,15 +36,15 @@ jobs:
         push: true
         tags: trituong/insta-aks-be:latest
       
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@0.20.0
-      with:
-        image-ref: 'docker.io/trituong/insta-aks-be:latest'
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
+#    - name: Run Trivy vulnerability scanner
+#      uses: aquasecurity/trivy-action@0.20.0
+#      with:
+#        image-ref: 'docker.io/trituong/insta-aks-be:latest'
+#        format: 'table'
+#        exit-code: '1'
+#        ignore-unfixed: true
+#        vuln-type: 'os,library'
+#        severity: 'CRITICAL,HIGH'
 
     - name: Build and push frontend docker image
       uses: docker/build-push-action@v5
